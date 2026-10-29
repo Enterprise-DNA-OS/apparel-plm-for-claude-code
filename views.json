@@ -1,13 +1,70 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Apparel PLM for Claude Code: what needs attention, rendered by npm run view",
+    "title": "This week in product development",
+    "subtitle": "Apparel PLM for Claude Code: late steps, samples, colour, margins and rule checks, rendered by npm run view",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Critical path, most behind first",
+        "note": "Each step is due a set number of days before the season launches. Days late is the most overdue open step.",
+        "sql": "select style, name, season, factory, steps_done || '/' || steps done, coalesce(worst_days_late, 0) days_late, coalesce(first_late_step, '') late_step, next_step, next_due from plm.style_progress order by coalesce(worst_days_late, 0) desc, next_due, style"
+      },
+      {
+        "title": "Samples overdue or waiting for a decision",
+        "sql": "select code, style, name, factory, kind, size, due_on, received_on, status, days_overdue from plm.sample_status where (status = 'requested' and days_overdue > 0) or status = 'received' order by days_overdue desc, due_on"
+      },
+      {
+        "title": "Fit points outside tolerance",
+        "sql": "select sample, style, name, size, pom_code pom, description, spec_cm, measured_cm, off_by_cm, tolerance_cm from plm.fit_issues where sample_status = 'received' order by sample, pom_code"
+      },
+      {
+        "title": "Lab dips and strike-offs waiting",
+        "sql": "select code, style, colourway, kind, submitted_on, due_on, status, days_overdue, comments from plm.approvals_waiting order by days_overdue desc, due_on"
+      },
+      {
+        "title": "Styles under target margin",
+        "note": "Margin is retail excluding GST less landed cost (FOB at the costing's exchange rate, freight and duty), over retail excluding GST.",
+        "sql": "select code, name, season, currency, retail_cents, landed_cents, margin_pct, target_margin_pct target, margin_gap_pct gap, retail_ex_gst_needed_cents retail_ex_gst_for_target_cents from plm.style_cost where margin_gap_pct < 0 order by margin_gap_pct"
+      },
+      {
+        "title": "Rule checks",
+        "note": "Each finding cites its rule in docs/compliance.md. A finding is a prompt to check, not legal advice.",
+        "sql": "select rule, style, name, detail from plm.compliance_findings order by rule, style"
+      }
+    ]
+  },
+  {
+    "name": "season",
+    "title": "Season line plan",
+    "subtitle": "Styles, colourways, units and margin by season and category",
+    "sections": [
+      {
+        "title": "Line plan",
+        "sql": "select season, category, styles, colourways, units, avg_margin_pct, under_target, not_costed from plm.line_plan order by (select launch_on from plm.seasons where code = season), category"
+      },
+      {
+        "title": "Every style and its margin",
+        "sql": "select code, name, season, category, style_status status, currency, retail_cents, landed_cents, margin_pct, target_margin_pct target, costing_status from plm.style_cost order by season, category, code"
+      },
+      {
+        "title": "Materials needed",
+        "note": "Consumption plus wastage times units: placed orders where they exist, the planned units where they do not.",
+        "sql": "select code, name, unit, supplier, season, styles, required, moq, flag from plm.material_demand order by season, flag desc, code"
+      }
+    ]
+  },
+  {
+    "name": "factories",
+    "title": "Factories",
+    "subtitle": "Sample delivery over the last year, overdue samples, audits and open orders",
+    "sections": [
+      {
+        "title": "Scorecard",
+        "sql": "select code, name, country, samples, received, on_time_pct, avg_days_late, overdue_now, rejected_pct, audit_scheme, audit_expires_on, open_order_units from plm.factory_scorecard order by code"
+      },
+      {
+        "title": "Open production orders",
+        "sql": "select o.code, s.code style, s.name, f.code factory, o.units, o.fob_cents, o.currency, o.ex_factory_on, o.status from plm.production_orders o join plm.styles s on s.id = o.style_id join plm.factories f on f.id = o.factory_id where o.status in ('draft','placed','in_production','shipped') order by o.ex_factory_on"
       }
     ]
   }

@@ -1,11 +1,68 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "tech-pack",
+    "title": "Tech pack",
+    "for_each": "select s.id, s.code || ' ' || s.name as label from plm.styles s where s.status <> 'dropped' order by s.code",
+    "file": "label",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Style",
+        "layout": "record",
+        "sql": "select s.code style_no, s.name, se.name season, s.category, s.department, f.name factory, s.designer, s.size_range, array_to_string(s.markets, ', ') markets, s.origin country_of_origin from plm.styles s join plm.seasons se on se.id = s.season_id left join plm.factories f on f.id = s.factory_id where s.id = $1"
+      },
+      {
+        "title": "Colourways",
+        "sql": "select code, name from plm.colourways where style_id = $1 and status = 'active' order by code"
+      },
+      {
+        "title": "Bill of materials",
+        "sql": "select m.code, m.name, m.kind, coalesce(m.composition, '') composition, b.placement, b.consumption, m.unit, b.wastage_pct, coalesce(m.supplier, '') supplier from plm.bom_lines b join plm.materials m on m.id = b.material_id where b.style_id = $1 order by m.kind, m.code"
+      },
+      {
+        "title": "Measurements (cm)",
+        "note": "Measure flat. A point outside tolerance is sent back with the sample comments.",
+        "sql": "select pom_code pom, description, size, spec_cm, tolerance_cm from plm.spec_lines where style_id = $1 order by pom_code, size"
+      },
+      {
+        "title": "Labels",
+        "layout": "record",
+        "note": "Fibre content and care instructions as they must appear on the permanent label. Check docs/compliance.md for the rules that apply in each market.",
+        "sql": "select coalesce(fibre_content, 'MISSING') fibre_content, coalesce(nullif(care_instructions, ''), 'MISSING') care_instructions, coalesce(nullif(care_symbols, ''), '') care_symbols, case when childrens_nightwear then coalesce('Category ' || nightwear_category, 'Category not set') || ', ' || coalesce(fire_label || ' fire hazard label', 'label not set') else 'Not children''s nightwear' end nightwear from plm.styles where id = $1"
+      }
+    ]
+  },
+  {
+    "name": "line-sheet",
+    "title": "Line sheet",
+    "for_each": "select id, code || ' ' || name as label from plm.seasons where status in ('planning','developing','production') order by launch_on",
+    "file": "label",
+    "sections": [
+      {
+        "title": "Season",
+        "layout": "record",
+        "sql": "select name, launch_on, (select count(*) from plm.styles s where s.season_id = $1 and s.status <> 'dropped')::int styles from plm.seasons where id = $1"
+      },
+      {
+        "title": "Styles",
+        "sql": "select s.code style_no, s.name, s.category, coalesce((select string_agg(c.name, ', ' order by c.code) from plm.colourways c where c.style_id = s.id and c.status = 'active'), '') colourways, s.size_range sizes, coalesce(s.fibre_content, '') fabric, (select brand_currency from plm.settings) currency, s.retail_cents from plm.styles s where s.season_id = $1 and s.status <> 'dropped' order by s.category, s.code"
+      }
+    ]
+  },
+  {
+    "name": "sample-comments",
+    "title": "Sample comments",
+    "for_each": "select sa.id, sa.code || ' ' || s.code as label from plm.samples sa join plm.styles s on s.id = sa.style_id where sa.status in ('received','approved','rejected') and sa.received_on >= current_date - 60 order by sa.code",
+    "file": "label",
+    "sections": [
+      {
+        "title": "Sample",
+        "layout": "record",
+        "sql": "select sa.code sample, s.code || ' ' || s.name style, coalesce(c.name, '') colourway, sa.kind, sa.size, f.name factory, sa.received_on, sa.status decision, coalesce(sa.comments, '') comments from plm.samples sa join plm.styles s on s.id = sa.style_id join plm.factories f on f.id = sa.factory_id left join plm.colourways c on c.id = sa.colourway_id where sa.id = $1"
+      },
+      {
+        "title": "Measurements against spec (cm)",
+        "sql": "select sp.pom_code pom, sp.description, sp.spec_cm, m.measured_cm, round(m.measured_cm - sp.spec_cm, 1) off_by_cm, sp.tolerance_cm, case when m.measured_cm is null then 'not measured' when abs(m.measured_cm - sp.spec_cm) > sp.tolerance_cm then 'CORRECT' else 'ok' end result from plm.samples sa join plm.spec_lines sp on sp.style_id = sa.style_id and sp.size = sa.size left join plm.fit_measurements m on m.sample_id = sa.id and m.pom_code = sp.pom_code where sa.id = $1 order by sp.pom_code"
+      }
     ]
   }
 ]

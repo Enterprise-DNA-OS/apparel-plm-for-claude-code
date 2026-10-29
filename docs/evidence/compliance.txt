@@ -1,0 +1,14 @@
+$ npm run plm -- compliance
+  rule                style   name                    season  detail                                                                
+  ------------------  ------  ----------------------  ------  ----------------------------------------------------------------------
+  au-care-label       SO-601  Canvas Tote             AW27    Sold in Australia with no care instructions or care symbols recorded  
+  factory-audit       SO-101  Merino Crew Tee         AW27    PO-2704 ex-factory 2027-01-22 at NBK: social audit expires 2026-12-08 
+  factory-audit       SO-101  Merino Crew Tee         AW27    PO-2703 ex-factory 2027-01-22 at NBK: social audit expires 2026-12-08 
+  fibre-total         SO-301  Organic Twill Trouser   AW27    Fibre content part "98% organic cotton, 3% elastane" adds to 101%, ...
+  nightwear-category  SO-401  Kids Fleece Pyjama Set  AW27    Children's nightwear with no fire hazard category (1 to 4) recorded   
+  nightwear-label     SO-402  Kids Flannel Pyjamas    AW27    Category 2 needs the low fire hazard (white) label; recorded: high    
+  nightwear-test      SO-401  Kids Fleece Pyjama Set  AW27    Children's nightwear with no burn test report reference on file       
+  nz-care-english     SO-302  Flannel Overshirt       AW27    Sold in New Zealand with no care instructions in English (symbols a...
+  nz-fibre-content    SO-502  Merino Beanie           AW27    Sold in New Zealand with no fibre content recorded for the permanen...
+  pp-before-bulk      SO-501  Fleece Half Zip         AW27    PO-2702 is in production with no approved pre-production sample       
+  pp-before-bulk      SO-501  Fleece Half Zip         AW27    PO-2701 is in production with no approved pre-production sample       

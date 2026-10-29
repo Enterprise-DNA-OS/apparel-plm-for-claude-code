@@ -1,0 +1,30 @@
+$ npm run plm -- sample SA-102
+
+sample
+  code: SA-102
+  style: SO-101
+  name: Merino Crew Tee
+  colourway: KWK
+  factory: NBK
+  kind: fit
+  size: M
+  requested on: 2026-09-19
+  due on: 2026-10-10
+  received on: 2026-10-17
+  status: received
+  days overdue: 0
+
+measurements
+  pom  description                           spec cm  measured cm  off by cm  tolerance cm  result
+  ---  ------------------------------------  -------  -----------  ---------  ------------  ------
+  A    Half chest, 2.5 cm below armhole         52.0         54.5        2.5           1.0  OUT   
+  B    Body length from high point shoulder     72.0         72.5        0.5           1.0  ok    
+  C    Sleeve length from centre back           84.0         83.5       -0.5           1.0  ok    
+
+comments
+  comments: 
+  decided by: 
+  decided on: 
+
+notes
+  (none)

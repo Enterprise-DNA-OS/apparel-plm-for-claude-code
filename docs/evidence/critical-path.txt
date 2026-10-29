@@ -1,0 +1,16 @@
+$ npm run plm -- critical-path
+  style   name                    season  factory  done  days late  late step                  next step                  next due  
+  ------  ----------------------  ------  -------  ----  ---------  -------------------------  -------------------------  ----------
+  SO-102  Merino Zip Neck         AW27    NBK      1/10         60  Tech pack sent to factory  Tech pack sent to factory  2026-08-30
+  SO-601  Canvas Tote             AW27    DHW      1/10         60  Tech pack sent to factory  Tech pack sent to factory  2026-08-30
+  SO-402  Kids Flannel Pyjamas    AW27    DHW      2/10         30  Proto sample approved      Proto sample approved      2026-09-29
+  SO-101  Merino Crew Tee         AW27    NBK      3/10          0                             Fit approved               2026-10-29
+  SO-201  Ripstop Shell Jacket    AW27    HCM      3/10          0                             Fit approved               2026-10-29
+  SO-202  Insulated Puffer Vest   AW27    HCM      3/10          0                             Fit approved               2026-10-29
+  SO-301  Organic Twill Trouser   AW27    DHW      3/10          0                             Fit approved               2026-10-29
+  SO-302  Flannel Overshirt       AW27    DHW      3/10          0                             Fit approved               2026-10-29
+  SO-401  Kids Fleece Pyjama Set  AW27    DHW      3/10          0                             Fit approved               2026-10-29
+  SO-501  Fleece Half Zip         AW27    HCM      6/10          0                             Fit approved               2026-10-29
+  SO-502  Merino Beanie           AW27    NBK      3/10          0                             Fit approved               2026-10-29
+  SO-801  Linen Camp Shirt        SS27             0/10          0                             Design brief signed off    2027-01-27
+  SO-802  Merino Tank             SS27    NBK      0/10          0                             Design brief signed off    2027-01-27

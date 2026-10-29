@@ -13,8 +13,11 @@ That layer used to be the whole product, because talking to a database was hard.
 
 ## What you give up
 
-- **A visual board.** Stages are a table you ask about, not cards you drag.
-- **A phone app.** It runs where Claude Code runs.
+- **Sketches and images on screen.** Delogue shows the flat sketch, the artwork and photos beside the tech pack. Here a style holds text and numbers; keep artwork in your shared drive and put the link in a note, or have Enterprise DNA add an image store to your version.
+- **The Adobe Illustrator plugin.** Delogue's Professional plan pushes artwork from Illustrator into the style. There is no plugin here.
+- **A supplier login.** In Delogue a factory can log in to see the tech pack and comment. Here the tech pack and the sample comments are rendered as files you send, and the factory replies by email.
+- **A visual board.** Statuses are a table you ask about, not cards you drag.
+- **A phone app.** It runs where Claude Code runs. Measuring a sample on the bench means typing the points in, or a person reading them out.
 - **A vendor help desk.** This is open source. Enterprise DNA supports the installed version for businesses that want someone to call.
 
 ## Who this fits
